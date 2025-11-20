@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { BookOpen, Users, TrendingUp, Star, Menu, X } from 'lucide-react';
 import { SearchBar, FilterDropdown, PaperCard } from './PaperComponents';
-import { dummyPapers, subjects, years, semesters, examTypes, difficulties } from '../utils/dummyData';
+import { dummyPapers, subjects, years, semesters, examTypes } from '../utils/dummyData';
+import backgroundImage from '../background.png';
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -36,9 +37,18 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-graphite-black">
+    <div 
+      className="min-h-screen"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       {/* Header */}
-      <header className="bg-hyper-indigo backdrop-blur-sm border-b border-soft-concrete/20 sticky top-0 z-50">
+      <header className="bg-black/20 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
@@ -71,8 +81,8 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-graphite-black/70 text-sm">Total Papers</p>
-                <p className="text-3xl font-bold text-hyper-indigo">{stats.totalPapers}</p>
+                <p className="text-white/70 text-sm">Total Papers</p>
+                <p className="text-3xl font-bold text-white">{stats.totalPapers}</p>
               </div>
               <BookOpen className="w-8 h-8 text-electric-fuchsia" />
             </div>
@@ -81,8 +91,8 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-graphite-black/70 text-sm">Total Downloads</p>
-                <p className="text-3xl font-bold text-hyper-indigo">{stats.totalDownloads.toLocaleString()}</p>
+                <p className="text-white/70 text-sm">Total Downloads</p>
+                <p className="text-3xl font-bold text-white">{stats.totalDownloads.toLocaleString()}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-dusk-teal" />
             </div>
@@ -91,8 +101,8 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-graphite-black/70 text-sm">With Solutions</p>
-                <p className="text-3xl font-bold text-hyper-indigo">{stats.withSolutions}</p>
+                <p className="text-white/70 text-sm">With Solutions</p>
+                <p className="text-3xl font-bold text-white">{stats.withSolutions}</p>
               </div>
               <Star className="w-8 h-8 text-cyber-lime" />
             </div>
@@ -101,10 +111,10 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-graphite-black/70 text-sm">Subjects</p>
-                <p className="text-3xl font-bold text-hyper-indigo">{stats.subjects}</p>
+                <p className="text-white/70 text-sm">Subjects</p>
+                <p className="text-3xl font-bold text-white">{stats.subjects}</p>
               </div>
-              <Users className="w-8 h-8 text-warm-ultraviolet" />
+              <Users className="w-8 h-8 text-dusk-teal" />
             </div>
           </div>
         </div>
@@ -148,9 +158,9 @@ const Dashboard = () => {
           
           {filteredPapers.length === 0 ? (
             <div className="card text-center py-12">
-              <BookOpen className="w-16 h-16 text-graphite-black/40 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-graphite-black mb-2">No papers found</h3>
-              <p className="text-graphite-black/70">
+              <BookOpen className="w-16 h-16 text-white/40 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">No papers found</h3>
+              <p className="text-white/70">
                 Try adjusting your search criteria or filters to find more papers.
               </p>
             </div>

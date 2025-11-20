@@ -4,7 +4,7 @@ import { Search, Filter, Download, CheckCircle, XCircle } from 'lucide-react';
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
     <div className="relative flex-1 max-w-md">
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-graphite-black/60 w-5 h-5" />
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
       <input
         type="text"
         placeholder="Search papers, subjects, topics..."
@@ -30,7 +30,7 @@ const FilterDropdown = ({ label, value, onChange, options }) => {
           </option>
         ))}
       </select>
-      <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 text-graphite-black/60 w-4 h-4 pointer-events-none" />
+      <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4 pointer-events-none" />
     </div>
   );
 };
@@ -41,8 +41,8 @@ const PaperCard = ({ paper }) => {
     <div className="card hover:scale-105 transform transition-all duration-300">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-bold text-graphite-black mb-2">{paper.title}</h3>
-          <p className="text-warm-ultraviolet font-semibold text-lg">{paper.subject}</p>
+          <h3 className="text-xl font-bold text-white mb-2">{paper.title}</h3>
+          <p className="text-dusk-teal font-semibold text-lg">{paper.subject}</p>
         </div>
         <div className="flex items-center space-x-2">
           {paper.hasSolution ? (
@@ -58,19 +58,10 @@ const PaperCard = ({ paper }) => {
         <span className="badge-secondary">{paper.examType}</span>
       </div>
 
-      <div className="flex flex-wrap gap-1 mb-4">
-        {paper.tags.map((tag) => (
-          <span key={tag} className="bg-hyper-indigo/10 text-hyper-indigo px-2 py-1 rounded text-xs">
-            #{tag}
-          </span>
-        ))}
-      </div>
-
       <div className="flex justify-between items-center">
-        <div className="text-sm text-graphite-black/70">
-          <p>{paper.downloadCount} downloads</p>
-          <p>Uploaded: {new Date(paper.uploadDate).toLocaleDateString()}</p>
-        </div>
+        <button className="btn-secondary flex items-center space-x-2">
+          <span>View Paper</span>
+        </button>
         <button className="btn-primary flex items-center space-x-2">
           <Download className="w-4 h-4" />
           <span>Download</span>

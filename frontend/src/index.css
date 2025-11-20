@@ -10,7 +10,9 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    @apply bg-neon-gradient min-h-screen text-paper-smoke;
+    min-height: 100vh;
+    color: #EBEBE3;
+    background: linear-gradient(135deg, #0D0D0F 0%, #1FA6A3 100%);
   }
 
   * {
@@ -20,26 +22,58 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-electric-fuchsia text-paper-smoke px-6 py-3 rounded-lg font-semibold 
-           transition-all duration-300 hover:bg-hyper-indigo hover:border-electric-fuchsia 
-           hover:border-2 hover:shadow-neon;
+    background: #FF1E8E;
+    color: #EBEBE3;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  .btn-primary:hover {
+    background: #1FA6A3;
+    box-shadow: 0 0 20px rgba(255, 30, 142, 0.3);
   }
 
   .btn-secondary {
-    @apply bg-dusk-teal text-paper-smoke px-4 py-2 rounded-lg font-medium 
-           transition-all duration-300 hover:bg-warm-ultraviolet hover:shadow-cyber;
+    background: #1FA6A3;
+    color: #EBEBE3;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover {
+    background: #FF1E8E;
+    box-shadow: 0 0 15px rgba(31, 166, 163, 0.2);
   }
 
   .card {
-    @apply bg-card-glow backdrop-blur-sm border border-soft-concrete/20 
-           rounded-xl p-6 transition-all duration-300 hover:shadow-lg 
-           hover:shadow-electric-fuchsia/20 text-graphite-black;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: #FFFFFF;
   }
 
   .input-field {
-    @apply bg-paper-smoke border border-soft-concrete rounded-lg px-4 py-2 
-           text-graphite-black placeholder-soft-concrete focus:outline-none 
-           focus:border-electric-fuchsia focus:ring-2 focus:ring-electric-fuchsia/20;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    backdrop-filter: blur(10px);
+  }
+  .input-field::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: #FF1E8E;
+    box-shadow: 0 0 0 2px rgba(255, 30, 142, 0.2);
   }
 
   .badge {
@@ -47,7 +81,12 @@
   }
 
   .badge-secondary {
-    @apply bg-warm-ultraviolet text-paper-smoke px-3 py-1 rounded-full text-sm font-medium;
+    background: #1FA6A3;
+    color: #EBEBE3;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
   }
 }
 
@@ -61,7 +100,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #7A3FF2;
+  background: #1FA6A3;
   border-radius: 4px;
 }
 
