@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Filter, Download, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Download, CheckCircle, XCircle } from 'lucide-react';
 
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
@@ -18,11 +18,11 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
 
 const FilterDropdown = ({ label, value, onChange, options }) => {
   return (
-    <div className="relative">
+    <div>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="input-field pr-8 appearance-none cursor-pointer"
+        className="input-field appearance-none cursor-pointer"
       >
         {options.map((option) => (
           <option key={option} value={option}>
@@ -30,7 +30,6 @@ const FilterDropdown = ({ label, value, onChange, options }) => {
           </option>
         ))}
       </select>
-      <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4 pointer-events-none" />
     </div>
   );
 };
