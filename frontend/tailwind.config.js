@@ -20,8 +20,8 @@ module.exports = {
         'ghost-indigo': '#E9E1FF',
       },
       backgroundImage: {
-        'neon-gradient': 'linear-gradient(135deg, #3B1E78 0%, #7A3FF2 100%)',
-        'card-glow': 'linear-gradient(135deg, #E9E1FF 0%, rgba(122, 63, 242, 0.1) 100%)',
+        'neon-gradient': 'linear-gradient(135deg, #0D0D0F 0%, #3B1E78 100%)',
+        'card-glow': 'linear-gradient(135deg, #EBEBE3 0%, rgba(235, 235, 227, 0.95) 100%)',
       },
       boxShadow: {
         'neon': '0 0 20px rgba(255, 30, 142, 0.3)',

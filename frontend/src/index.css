@@ -31,13 +31,13 @@
   }
 
   .card {
-    @apply bg-card-glow backdrop-blur-sm border border-ghost-indigo/30 
+    @apply bg-card-glow backdrop-blur-sm border border-soft-concrete/20 
            rounded-xl p-6 transition-all duration-300 hover:shadow-lg 
-           hover:shadow-warm-ultraviolet/20;
+           hover:shadow-electric-fuchsia/20 text-graphite-black;
   }
 
   .input-field {
-    @apply bg-ghost-indigo/20 border border-ghost-indigo/40 rounded-lg px-4 py-2 
+    @apply bg-paper-smoke border border-soft-concrete rounded-lg px-4 py-2 
            text-graphite-black placeholder-soft-concrete focus:outline-none 
            focus:border-electric-fuchsia focus:ring-2 focus:ring-electric-fuchsia/20;
   }

@@ -36,9 +36,9 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neon-gradient">
+    <div className="min-h-screen bg-graphite-black">
       {/* Header */}
-      <header className="bg-hyper-indigo/90 backdrop-blur-sm border-b border-ghost-indigo/20 sticky top-0 z-50">
+      <header className="bg-hyper-indigo backdrop-blur-sm border-b border-soft-concrete/20 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
@@ -71,7 +71,7 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-soft-concrete text-sm">Total Papers</p>
+                <p className="text-graphite-black/70 text-sm">Total Papers</p>
                 <p className="text-3xl font-bold text-hyper-indigo">{stats.totalPapers}</p>
               </div>
               <BookOpen className="w-8 h-8 text-electric-fuchsia" />
@@ -81,7 +81,7 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-soft-concrete text-sm">Total Downloads</p>
+                <p className="text-graphite-black/70 text-sm">Total Downloads</p>
                 <p className="text-3xl font-bold text-hyper-indigo">{stats.totalDownloads.toLocaleString()}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-dusk-teal" />
@@ -91,7 +91,7 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-soft-concrete text-sm">With Solutions</p>
+                <p className="text-graphite-black/70 text-sm">With Solutions</p>
                 <p className="text-3xl font-bold text-hyper-indigo">{stats.withSolutions}</p>
               </div>
               <Star className="w-8 h-8 text-cyber-lime" />
@@ -101,7 +101,7 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-soft-concrete text-sm">Subjects</p>
+                <p className="text-graphite-black/70 text-sm">Subjects</p>
                 <p className="text-3xl font-bold text-hyper-indigo">{stats.subjects}</p>
               </div>
               <Users className="w-8 h-8 text-warm-ultraviolet" />
@@ -153,9 +153,9 @@ const Dashboard = () => {
           
           {filteredPapers.length === 0 ? (
             <div className="card text-center py-12">
-              <BookOpen className="w-16 h-16 text-soft-concrete mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-soft-concrete mb-2">No papers found</h3>
-              <p className="text-soft-concrete">
+              <BookOpen className="w-16 h-16 text-graphite-black/40 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-graphite-black mb-2">No papers found</h3>
+              <p className="text-graphite-black/70">
                 Try adjusting your search criteria or filters to find more papers.
               </p>
             </div>

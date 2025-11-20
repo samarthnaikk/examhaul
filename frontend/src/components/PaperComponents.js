@@ -4,7 +4,7 @@ import { Search, Filter, Download, CheckCircle, XCircle } from 'lucide-react';
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
     <div className="relative flex-1 max-w-md">
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-soft-concrete w-5 h-5" />
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-graphite-black/60 w-5 h-5" />
       <input
         type="text"
         placeholder="Search papers, subjects, topics..."
@@ -30,7 +30,7 @@ const FilterDropdown = ({ label, value, onChange, options }) => {
           </option>
         ))}
       </select>
-      <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 text-soft-concrete w-4 h-4 pointer-events-none" />
+      <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 text-graphite-black/60 w-4 h-4 pointer-events-none" />
     </div>
   );
 };
@@ -72,14 +72,14 @@ const PaperCard = ({ paper }) => {
 
       <div className="flex flex-wrap gap-1 mb-4">
         {paper.tags.map((tag) => (
-          <span key={tag} className="bg-ghost-indigo/40 text-hyper-indigo px-2 py-1 rounded text-xs">
+          <span key={tag} className="bg-hyper-indigo/10 text-hyper-indigo px-2 py-1 rounded text-xs">
             #{tag}
           </span>
         ))}
       </div>
 
       <div className="flex justify-between items-center">
-        <div className="text-sm text-soft-concrete">
+        <div className="text-sm text-graphite-black/70">
           <p>{paper.downloadCount} downloads</p>
           <p>Uploaded: {new Date(paper.uploadDate).toLocaleDateString()}</p>
         </div>
