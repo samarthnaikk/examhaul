@@ -1,0 +1,30 @@
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Python cache and virtual environments
+__pycache__/
+*.pyc
+env/
+venv/
+color_scheme.md
+# Ignore node modules (if any JS tooling is used)
+node_modules/
+
+# Ignore logs
+*.log
+.env
+# Ignore PDFs and solutions generated locally (if not tracked)
+# papers/*.pdf
+# solutions/*.pdf
+
+# Ignore editor/project files
+.vscode/
+.idea/
+*.swp
+
+# Ignore OS trash
+.Trashes
+
+# Ignore backup files
+*~
+*.bak
