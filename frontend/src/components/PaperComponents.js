@@ -36,14 +36,6 @@ const FilterDropdown = ({ label, value, onChange, options }) => {
 };
 
 const PaperCard = ({ paper }) => {
-  const getDifficultyColor = (difficulty) => {
-    switch (difficulty) {
-      case 'Easy': return 'bg-cyber-lime text-graphite-black';
-      case 'Medium': return 'bg-dusk-teal text-paper-smoke';
-      case 'Hard': return 'bg-electric-fuchsia text-paper-smoke';
-      default: return 'bg-soft-concrete text-graphite-black';
-    }
-  };
 
   return (
     <div className="card hover:scale-105 transform transition-all duration-300">
@@ -54,20 +46,16 @@ const PaperCard = ({ paper }) => {
         </div>
         <div className="flex items-center space-x-2">
           {paper.hasSolution ? (
-            <CheckCircle className="w-6 h-6 text-cyber-lime" />
+            <CheckCircle className="w-6 h-6 text-green-700" />
           ) : (
             <XCircle className="w-6 h-6 text-soft-concrete" />
           )}
         </div>
       </div>
-      
       <div className="flex flex-wrap gap-2 mb-4">
         <span className="badge-secondary">{paper.year}</span>
         <span className="badge-secondary">{paper.semester}</span>
         <span className="badge-secondary">{paper.examType}</span>
-        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyColor(paper.difficulty)}`}>
-          {paper.difficulty}
-        </span>
       </div>
 
       <div className="flex flex-wrap gap-1 mb-4">

@@ -8,7 +8,6 @@ export const dummyPapers = [
     semester: "Fall",
     examType: "CAT-1",
     tags: ["microprocessors", "memory", "cache"],
-    difficulty: "Medium",
     hasSolution: true,
     downloadCount: 245,
     uploadDate: "2023-10-15"
@@ -21,7 +20,6 @@ export const dummyPapers = [
     semester: "Fall",
     examType: "CAT-2",
     tags: ["trees", "graphs", "dynamic programming"],
-    difficulty: "Hard",
     hasSolution: true,
     downloadCount: 389,
     uploadDate: "2023-11-20"
@@ -34,7 +32,6 @@ export const dummyPapers = [
     semester: "Spring",
     examType: "FAT",
     tags: ["processes", "scheduling", "memory management"],
-    difficulty: "Medium",
     hasSolution: false,
     downloadCount: 156,
     uploadDate: "2023-05-10"
@@ -47,7 +44,6 @@ export const dummyPapers = [
     semester: "Fall",
     examType: "CAT-1",
     tags: ["sql", "normalization", "transactions"],
-    difficulty: "Easy",
     hasSolution: true,
     downloadCount: 423,
     uploadDate: "2022-10-05"
@@ -60,7 +56,6 @@ export const dummyPapers = [
     semester: "Spring",
     examType: "CAT-2",
     tags: ["neural networks", "regression", "classification"],
-    difficulty: "Hard",
     hasSolution: true,
     downloadCount: 298,
     uploadDate: "2023-04-18"
@@ -73,7 +68,6 @@ export const dummyPapers = [
     semester: "Fall",
     examType: "CAT-1",
     tags: ["html", "css", "javascript", "react"],
-    difficulty: "Easy",
     hasSolution: false,
     downloadCount: 167,
     uploadDate: "2023-09-25"
@@ -86,7 +80,6 @@ export const dummyPapers = [
     semester: "Spring",
     examType: "FAT",
     tags: ["sdlc", "testing", "design patterns"],
-    difficulty: "Medium",
     hasSolution: true,
     downloadCount: 201,
     uploadDate: "2022-05-12"
@@ -99,7 +92,6 @@ export const dummyPapers = [
     semester: "Fall",
     examType: "CAT-2",
     tags: ["search algorithms", "knowledge representation"],
-    difficulty: "Hard",
     hasSolution: false,
     downloadCount: 134,
     uploadDate: "2023-11-08"
@@ -115,4 +107,4 @@ export const subjects = [
 export const years = ["All Years", "2023", "2022", "2021", "2020"];
 export const semesters = ["All Semesters", "Fall", "Spring"];
 export const examTypes = ["All Types", "CAT-1", "CAT-2", "FAT"];
-export const difficulties = ["All Levels", "Easy", "Medium", "Hard"];
+// export const difficulties = ["All Levels", "Easy", "Medium", "Hard"];

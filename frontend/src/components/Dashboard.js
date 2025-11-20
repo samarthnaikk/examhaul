@@ -9,7 +9,7 @@ const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState('All Years');
   const [selectedSemester, setSelectedSemester] = useState('All Semesters');
   const [selectedExamType, setSelectedExamType] = useState('All Types');
-  const [selectedDifficulty, setSelectedDifficulty] = useState('All Levels');
+  // const [selectedDifficulty, setSelectedDifficulty] = useState('All Levels');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const filteredPapers = useMemo(() => {
@@ -22,11 +22,11 @@ const Dashboard = () => {
       const matchesYear = selectedYear === 'All Years' || paper.year.toString() === selectedYear;
       const matchesSemester = selectedSemester === 'All Semesters' || paper.semester === selectedSemester;
       const matchesExamType = selectedExamType === 'All Types' || paper.examType === selectedExamType;
-      const matchesDifficulty = selectedDifficulty === 'All Levels' || paper.difficulty === selectedDifficulty;
+      // const matchesDifficulty = selectedDifficulty === 'All Levels' || paper.difficulty === selectedDifficulty;
 
-      return matchesSearch && matchesSubject && matchesYear && matchesSemester && matchesExamType && matchesDifficulty;
+      return matchesSearch && matchesSubject && matchesYear && matchesSemester && matchesExamType;
     });
-  }, [searchTerm, selectedSubject, selectedYear, selectedSemester, selectedExamType, selectedDifficulty]);
+  }, [searchTerm, selectedSubject, selectedYear, selectedSemester, selectedExamType]);
 
   const stats = {
     totalPapers: dummyPapers.length,
@@ -136,12 +136,7 @@ const Dashboard = () => {
               onChange={setSelectedExamType}
               options={examTypes}
             />
-            <FilterDropdown
-              label="Difficulty"
-              value={selectedDifficulty}
-              onChange={setSelectedDifficulty}
-              options={difficulties}
-            />
+
           </div>
         </div>
 
