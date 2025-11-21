@@ -3,7 +3,7 @@ import { Search, Download, CheckCircle, XCircle } from 'lucide-react';
 
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   return (
-    <div className="relative flex-1 max-w-md">
+    <div className="relative flex-1 max-w-3xl mx-auto w-full">
       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
       <input
         type="text"

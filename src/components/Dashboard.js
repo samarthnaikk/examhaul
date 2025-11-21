@@ -150,27 +150,50 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Papers Grid */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-paper-smoke mb-4">
-            Past Papers ({filteredPapers.length} found)
-          </h2>
-          
-          {filteredPapers.length === 0 ? (
-            <div className="card text-center py-12">
-              <BookOpen className="w-16 h-16 text-white/40 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No papers found</h3>
-              <p className="text-white/70">
-                Try adjusting your search criteria or filters to find more papers.
+        {/* Centered Search Section */}
+        <div className="flex items-center justify-center py-16">
+          <div className="w-full max-w-4xl text-center">
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Find Your Papers
+              </h2>
+              <p className="text-white/70 text-lg">
+                Search through VIT Vellore's past papers archive
               </p>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPapers.map((paper) => (
-                <PaperCard key={paper.id} paper={paper} />
-              ))}
+            
+            <div className="w-full max-w-5xl mx-auto mt-4">
+              <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </div>
-          )}
+            
+            {searchTerm && (
+              <div className="mt-8">
+                <div className="text-white/70 mb-6 text-lg">
+                  {filteredPapers.length} papers found for "{searchTerm}"
+                </div>
+                
+                {filteredPapers.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-96 overflow-y-auto">
+                    {filteredPapers.slice(0, 6).map((paper) => (
+                      <PaperCard key={paper.id} paper={paper} />
+                    ))}
+                    {filteredPapers.length > 6 && (
+                      <div className="col-span-full text-white/60 text-sm mt-4">
+                        Showing first 6 results. Refine your search for more specific results.
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="card py-8">
+                    <BookOpen className="w-12 h-12 text-white/40 mx-auto mb-4" />
+                    <p className="text-white/70">
+                      No papers found. Try a different search term.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
