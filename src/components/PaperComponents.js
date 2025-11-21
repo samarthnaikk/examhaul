@@ -15,10 +15,11 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
   const [typing, setTyping] = useState(true);
   const intervalRef = useRef();
   const typingRef = useRef();
+  const [isFocused, setIsFocused] = useState(false);
 
   // Typing animation effect (slower)
   useEffect(() => {
-    if (!searchTerm) {
+    if (!searchTerm && !isFocused) {
       setTyped('');
       setTyping(true);
       let charIdx = 0;
@@ -37,11 +38,11 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
       }, 80); // slower typing speed
     }
     return () => clearInterval(typingRef.current);
-  }, [placeholderIdx, searchTerm]);
+  }, [placeholderIdx, searchTerm, isFocused]);
 
   // Rotating placeholder every 5s
   useEffect(() => {
-    if (!searchTerm) {
+    if (!searchTerm && !isFocused) {
       intervalRef.current = setInterval(() => {
         setPlaceholderIdx((prev) => (prev + 1) % rotatingPlaceholders.length);
       }, 5000);
@@ -49,7 +50,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
       clearInterval(intervalRef.current);
     }
     return () => clearInterval(intervalRef.current);
-  }, [searchTerm]);
+  }, [searchTerm, isFocused]);
 
   return (
     <div className="relative flex-1 max-w-3xl mx-auto w-full">
@@ -58,9 +59,11 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
       </span>
       <input
         type="text"
-        placeholder={searchTerm ? '' : typed}
+        placeholder={searchTerm || isFocused ? '' : typed}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         className="input-field w-full pl-14 pr-4 bg-transparent text-white placeholder-white/60"
         style={{ minHeight: '3.25rem' }}
       />
