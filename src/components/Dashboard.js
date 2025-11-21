@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { BookOpen, Users, TrendingUp, Star, Menu, X } from 'lucide-react';
 import { SearchBar, FilterDropdown, PaperCard } from './PaperComponents';
 import { dummyPapers, subjects, years, semesters, examTypes } from '../utils/dummyData';
-import backgroundImage from '../background.png';
+// import backgroundImage from '../background.png';
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -40,7 +40,7 @@ const Dashboard = () => {
     <div 
       className="min-h-screen"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${backgroundImage})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/background.png)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
