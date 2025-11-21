@@ -130,11 +130,7 @@ const PaperCard = ({ paper }) => {
             <p className="text-dusk-teal font-semibold text-lg">{paper.subject}</p>
           </div>
           <div className="flex items-center space-x-2">
-            {paper.hasSolution ? (
-              <CheckCircle className="w-6 h-6 text-green-700" />
-            ) : (
-              <XCircle className="w-6 h-6 text-soft-concrete" />
-            )}
+            <CheckCircle className="w-6 h-6 text-green-700" />
           </div>
         </div>
         <div className="flex flex-wrap gap-2 mb-4">

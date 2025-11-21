@@ -41,7 +41,7 @@ const Dashboard = () => {
           semester: 'General',
           examType: 'Past Paper',
           downloadCount: Math.floor(Math.random() * 1000), // Random for now
-          hasSolution: Math.random() > 0.5, // Random for now
+          hasSolution: true, // All papers have solutions
           tags: ['pdf', 'exam'],
           url: item.url
         };
@@ -77,7 +77,7 @@ const Dashboard = () => {
   const stats = {
     totalPapers: apiPapers.length,
     totalDownloads: apiPapers.reduce((sum, paper) => sum + paper.downloadCount, 0),
-    withSolutions: apiPapers.filter(paper => paper.hasSolution).length,
+    withSolutions: apiPapers.length, // All papers have solutions
     subjects: new Set(apiPapers.map(paper => paper.subject)).size
   };
 
