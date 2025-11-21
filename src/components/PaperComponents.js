@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, Download, CheckCircle, XCircle } from 'lucide-react';
-import Modal from './Modal';
+import { Search, CheckCircle, XCircle } from 'lucide-react';
 
 const rotatingPlaceholders = [
   "Search exam papers, subjects, or topics...",
@@ -119,71 +118,36 @@ const FilterDropdown = ({ label, value, onChange, options }) => {
 };
 
 const PaperCard = ({ paper }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleDownload = () => {
-    if (paper.url) {
-      const link = document.createElement('a');
-      link.href = paper.url;
-      link.download = paper.title;
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
-
   return (
-    <>
-      <div className="card hover:scale-105 transform transition-all duration-300 w-full">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h3 className="text-xl font-bold text-white mb-2">{paper.title}</h3>
-            <p className="text-dusk-teal font-semibold text-lg">{paper.subject}</p>
-          </div>
-          <div className="flex items-center space-x-2">
-            {paper.hasSolution ? (
-              <CheckCircle className="w-6 h-6 text-green-700" />
-            ) : (
-              <XCircle className="w-6 h-6 text-soft-concrete" />
-            )}
-          </div>
+    <div className="card hover:scale-105 transform transition-all duration-300 w-full">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h3 className="text-xl font-bold text-white mb-2">{paper.title}</h3>
+          <p className="text-dusk-teal font-semibold text-lg">{paper.subject}</p>
         </div>
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className="badge-secondary">{paper.year}</span>
-          <span className="badge-secondary">{paper.semester}</span>
-          <span className="badge-secondary">{paper.examType}</span>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="btn-secondary flex items-center space-x-2"
-          >
-            <span>View Paper</span>
-          </button>
-          <button 
-            onClick={handleDownload}
-            className="btn-primary flex items-center space-x-2"
-          >
-            <Download className="w-4 h-4" />
-            <span>Download</span>
-          </button>
+        <div className="flex items-center space-x-2">
+          {paper.hasSolution ? (
+            <CheckCircle className="w-6 h-6 text-green-700" />
+          ) : (
+            <XCircle className="w-6 h-6 text-soft-concrete" />
+          )}
         </div>
       </div>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        {paper.url ? (
-          <iframe
-            src={`https://docs.google.com/gview?url=${encodeURIComponent(paper.url)}&embedded=true`}
-            className="w-full h-full"
-            frameBorder="0"
-            title="Paper Preview"
-          ></iframe>
-        ) : (
-          <div className="text-white">Could not load paper preview.</div>
-        )}
-      </Modal>
-    </>
+      <div className="flex flex-wrap gap-2 mb-4">
+        <span className="badge-secondary">{paper.year}</span>
+        <span className="badge-secondary">{paper.semester}</span>
+        <span className="badge-secondary">{paper.examType}</span>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <button 
+          onClick={() => paper.url && window.open(paper.url, '_blank')}
+          className="btn-secondary flex items-center space-x-2"
+        >
+          <span>View Paper</span>
+        </button>
+      </div>
+    </div>
   );
 };
 

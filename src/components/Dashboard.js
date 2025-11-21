@@ -32,8 +32,7 @@ const Dashboard = () => {
       // Transform API data to match our component structure
       const transformedPapers = data.map((item, index) => {
         const urlParts = item.url.split('?');
-        const cleanUrl = urlParts[0];
-        const fileName = cleanUrl.split('/').pop();
+        const fileName = urlParts[0].split('/').pop();
         return {
           id: item.id,
           title: fileName.replace('.pdf', ''),
@@ -44,7 +43,7 @@ const Dashboard = () => {
           downloadCount: Math.floor(Math.random() * 1000), // Random for now
           hasSolution: Math.random() > 0.5, // Random for now
           tags: ['pdf', 'exam'],
-          url: cleanUrl
+          url: item.url
         };
       });
       
