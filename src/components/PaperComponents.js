@@ -12,7 +12,6 @@ const rotatingPlaceholders = [
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [typed, setTyped] = useState('');
-  const [typing, setTyping] = useState(true);
   const intervalRef = useRef();
   const typingRef = useRef();
   const [isFocused, setIsFocused] = useState(false);
@@ -21,7 +20,6 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
   useEffect(() => {
     if (!searchTerm && !isFocused) {
       setTyped('');
-      setTyping(true);
       let charIdx = 0;
       const currentText = rotatingPlaceholders[placeholderIdx];
       typingRef.current = setInterval(() => {
@@ -31,7 +29,6 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
             return currentText.slice(0, charIdx);
           } else {
             clearInterval(typingRef.current);
-            setTyping(false);
             return currentText;
           }
         });
