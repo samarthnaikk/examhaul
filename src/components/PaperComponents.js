@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, CheckCircle, XCircle } from 'lucide-react';
+import PDFViewer from './PDFViewer';
 
 const rotatingPlaceholders = [
   "Search exam papers, subjects, or topics...",
@@ -118,36 +119,47 @@ const FilterDropdown = ({ label, value, onChange, options }) => {
 };
 
 const PaperCard = ({ paper }) => {
-  return (
-    <div className="card hover:scale-105 transform transition-all duration-300 w-full">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-bold text-white mb-2">{paper.title}</h3>
-          <p className="text-dusk-teal font-semibold text-lg">{paper.subject}</p>
-        </div>
-        <div className="flex items-center space-x-2">
-          {paper.hasSolution ? (
-            <CheckCircle className="w-6 h-6 text-green-700" />
-          ) : (
-            <XCircle className="w-6 h-6 text-soft-concrete" />
-          )}
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-2 mb-4">
-        <span className="badge-secondary">{paper.year}</span>
-        <span className="badge-secondary">{paper.semester}</span>
-        <span className="badge-secondary">{paper.examType}</span>
-      </div>
+  const [isPDFViewerOpen, setIsPDFViewerOpen] = useState(false);
 
-      <div className="flex justify-between items-center">
-        <button 
-          onClick={() => paper.url && window.open(paper.url, '_blank')}
-          className="btn-secondary flex items-center space-x-2"
-        >
-          <span>View Paper</span>
-        </button>
+  return (
+    <>
+      <div className="card hover:scale-105 transform transition-all duration-300 w-full">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h3 className="text-xl font-bold text-white mb-2">{paper.title}</h3>
+            <p className="text-dusk-teal font-semibold text-lg">{paper.subject}</p>
+          </div>
+          <div className="flex items-center space-x-2">
+            {paper.hasSolution ? (
+              <CheckCircle className="w-6 h-6 text-green-700" />
+            ) : (
+              <XCircle className="w-6 h-6 text-soft-concrete" />
+            )}
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          <span className="badge-secondary">{paper.year}</span>
+          <span className="badge-secondary">{paper.semester}</span>
+          <span className="badge-secondary">{paper.examType}</span>
+        </div>
+
+        <div className="flex justify-between items-center">
+          <button 
+            onClick={() => setIsPDFViewerOpen(true)}
+            className="btn-secondary flex items-center space-x-2"
+          >
+            <span>View Paper</span>
+          </button>
+        </div>
       </div>
-    </div>
+      
+      <PDFViewer
+        isOpen={isPDFViewerOpen}
+        onClose={() => setIsPDFViewerOpen(false)}
+        pdfUrl={paper.url}
+        title={paper.title}
+      />
+    </>
   );
 };
 
