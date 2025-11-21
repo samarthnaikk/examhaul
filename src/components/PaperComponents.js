@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, CheckCircle, XCircle } from 'lucide-react';
+import { Search, CheckCircle } from 'lucide-react';
 import PDFViewer from './PDFViewer';
 
 const rotatingPlaceholders = [

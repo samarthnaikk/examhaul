@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { BookOpen, Users, TrendingUp, Star, Menu, X } from 'lucide-react';
 import { SearchBar, FilterDropdown, PaperCard } from './PaperComponents';
 import { subjects } from '../utils/courseList';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Download, ZoomIn, ZoomOut } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 
 const PDFViewer = ({ isOpen, onClose, pdfUrl, title }) => {
   if (!isOpen) return null;
