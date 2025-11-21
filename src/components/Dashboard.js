@@ -1,24 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { BookOpen, Users, TrendingUp, Star, Menu, X } from 'lucide-react';
 import { SearchBar, FilterDropdown, PaperCard } from './PaperComponents';
-import { dummyPapers, subjects, years, semesters, examTypes } from '../utils/dummyData';
+import { subjects } from '../utils/courseList';
 // import backgroundImage from '../background.png';
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All Subjects');
-  const [selectedYear, setSelectedYear] = useState('All Years');
-  const [selectedSemester, setSelectedSemester] = useState('All Semesters');
-  const [selectedExamType, setSelectedExamType] = useState('All Types');
-  // const [selectedDifficulty, setSelectedDifficulty] = useState('All Levels');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [apiPapers, setApiPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Fetch papers from API
-  const fetchPapers = async (query) => {
-    if (!query.trim()) {
+  const fetchPapers = async (subject) => {
+    if (!subject || subject === 'All Subjects') {
       setApiPapers([]);
       return;
     }
@@ -27,25 +23,30 @@ const Dashboard = () => {
     setError(null);
     
     try {
-      const response = await fetch(`https://examhaul-backend.vercel.app/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`https://examhaul-backend.vercel.app/search?q=${encodeURIComponent(subject)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch papers');
       }
       const data = await response.json();
       
       // Transform API data to match our component structure
-      const transformedPapers = data.map((item, index) => ({
-        id: item.id,
-        title: `Paper ${item.id}`,
-        subject: 'General', // You might want to extract this from filename or add to API
-        year: new Date().getFullYear(), // Default to current year or extract from filename
-        semester: 'General',
-        examType: 'Past Paper',
-        downloadCount: Math.floor(Math.random() * 1000), // Random for now
-        hasSolution: Math.random() > 0.5, // Random for now
-        tags: ['pdf', 'exam'],
-        url: item.url
-      }));
+      const transformedPapers = data.map((item, index) => {
+        const urlParts = item.url.split('?');
+        const cleanUrl = urlParts[0];
+        const fileName = cleanUrl.split('/').pop();
+        return {
+          id: item.id,
+          title: fileName.replace('.pdf', ''),
+          subject: subject,
+          year: new Date().getFullYear(), // Default to current year or extract from filename
+          semester: 'General',
+          examType: 'Past Paper',
+          downloadCount: Math.floor(Math.random() * 1000), // Random for now
+          hasSolution: Math.random() > 0.5, // Random for now
+          tags: ['pdf', 'exam'],
+          url: cleanUrl
+        };
+      });
       
       setApiPapers(transformedPapers);
     } catch (err) {
@@ -56,44 +57,29 @@ const Dashboard = () => {
     }
   };
 
-  // Debounced API call when search term changes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchTerm) {
-        fetchPapers(searchTerm);
-      } else {
-        setApiPapers([]);
-      }
-    }, 500); // 500ms debounce
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
+  const handleSubjectSelect = (subject) => {
+    setSearchTerm(subject);
+    setSelectedSubject(subject);
+    fetchPapers(subject);
+  };
 
   const filteredPapers = useMemo(() => {
-    // Use API papers if available and search term exists, otherwise use dummy data
-    const papersToFilter = searchTerm && apiPapers.length > 0 ? apiPapers : dummyPapers;
-    
-    return papersToFilter.filter(paper => {
+    return apiPapers.filter(paper => {
       const matchesSearch = !searchTerm || 
                            paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           paper.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           paper.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+                           paper.subject.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesSubject = selectedSubject === 'All Subjects' || paper.subject === selectedSubject;
-      const matchesYear = selectedYear === 'All Years' || paper.year.toString() === selectedYear;
-      const matchesSemester = selectedSemester === 'All Semesters' || paper.semester === selectedSemester;
-      const matchesExamType = selectedExamType === 'All Types' || paper.examType === selectedExamType;
-      // const matchesDifficulty = selectedDifficulty === 'All Levels' || paper.difficulty === selectedDifficulty;
-
-      return matchesSearch && matchesSubject && matchesYear && matchesSemester && matchesExamType;
+      
+      return matchesSearch && matchesSubject;
     });
-  }, [searchTerm, apiPapers, selectedSubject, selectedYear, selectedSemester, selectedExamType]);
+  }, [searchTerm, apiPapers, selectedSubject]);
 
   const stats = {
-    totalPapers: dummyPapers.length,
-    totalDownloads: dummyPapers.reduce((sum, paper) => sum + paper.downloadCount, 0),
-    withSolutions: dummyPapers.filter(paper => paper.hasSolution).length,
-    subjects: new Set(dummyPapers.map(paper => paper.subject)).size
+    totalPapers: apiPapers.length,
+    totalDownloads: apiPapers.reduce((sum, paper) => sum + paper.downloadCount, 0),
+    withSolutions: apiPapers.filter(paper => paper.hasSolution).length,
+    subjects: new Set(apiPapers.map(paper => paper.subject)).size
   };
 
   return (
@@ -131,7 +117,12 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Mobile Search */}
         <div className="md:hidden mb-6">
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <SearchBar 
+            searchTerm={searchTerm} 
+            setSearchTerm={setSearchTerm}
+            subjects={subjects}
+            onSubjectSelect={handleSubjectSelect}
+          />
         </div>
 
         {/* Stats Cards */}
@@ -183,28 +174,18 @@ const Dashboard = () => {
             <FilterDropdown
               label="Subject"
               value={selectedSubject}
-              onChange={setSelectedSubject}
+              onChange={(value) => {
+                setSelectedSubject(value);
+                if (value !== 'All Subjects') {
+                  handleSubjectSelect(value);
+                } else {
+                  setSearchTerm('');
+                  setApiPapers([]);
+                }
+              }}
               options={subjects}
             />
-            <FilterDropdown
-              label="Year"
-              value={selectedYear}
-              onChange={setSelectedYear}
-              options={years}
-            />
-            <FilterDropdown
-              label="Semester"
-              value={selectedSemester}
-              onChange={setSelectedSemester}
-              options={semesters}
-            />
-            <FilterDropdown
-              label="Exam Type"
-              value={selectedExamType}
-              onChange={setSelectedExamType}
-              options={examTypes}
-            />
-
+            {/* Other filters can be re-enabled if needed */}
           </div>
         </div>
 
@@ -219,52 +200,53 @@ const Dashboard = () => {
             </div>
             
             <div className="w-full max-w-5xl mx-auto mt-4">
-              <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+              <SearchBar 
+                searchTerm={searchTerm} 
+                setSearchTerm={setSearchTerm}
+                subjects={subjects}
+                onSubjectSelect={handleSubjectSelect}
+              />
             </div>
             
-            {searchTerm && (
+            {searchTerm && !loading && (
               <div className="mt-8">
-                {loading ? (
-                  <div className="text-white/70 mb-6 text-lg text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-                    Searching papers...
-                  </div>
-                ) : error ? (
-                  <div className="card py-8 border-red-500/20 bg-red-500/10">
-                    <p className="text-red-400 text-center">
-                      Error: {error}
+                {error ? (
+                  <div className="card py-8">
+                    <BookOpen className="w-12 h-12 text-white/40 mx-auto mb-4" />
+                    <p className="text-white/70">
+                      No papers found. Try a different search term or select a subject.
                     </p>
                   </div>
                 ) : (
                   <>
                     <div className="text-white/70 mb-6 text-lg">
                       {filteredPapers.length} papers found for "{searchTerm}"
-                      {apiPapers.length > 0 && (
-                        <span className="text-cyber-lime text-sm ml-2">(from API)</span>
-                      )}
                     </div>
                     
                     {filteredPapers.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-96 overflow-y-auto">
-                        {filteredPapers.slice(0, 6).map((paper) => (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {filteredPapers.map((paper) => (
                           <PaperCard key={paper.id} paper={paper} />
                         ))}
-                        {filteredPapers.length > 6 && (
-                          <div className="col-span-full text-white/60 text-sm mt-4">
-                            Showing first 6 results. Refine your search for more specific results.
-                          </div>
-                        )}
                       </div>
                     ) : (
                       <div className="card py-8">
                         <BookOpen className="w-12 h-12 text-white/40 mx-auto mb-4" />
                         <p className="text-white/70">
-                          No papers found. Try a different search term.
+                          No papers found. Try a different search term or select a subject.
                         </p>
                       </div>
                     )}
                   </>
                 )}
+              </div>
+            )}
+            {loading && (
+              <div className="mt-8">
+                <div className="text-white/70 mb-6 text-lg text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                  Searching papers...
+                </div>
               </div>
             )}
           </div>
