@@ -80,11 +80,11 @@ const SearchBar = ({ searchTerm, setSearchTerm, subjects, onSubjectSelect }) => 
         style={{ minHeight: '3.25rem' }}
       />
       {showSuggestions && searchTerm && filteredSubjects.length > 0 && (
-        <ul className="absolute z-20 w-full bg-gray-800 border border-gray-700 rounded-md mt-1 max-h-60 overflow-y-auto">
+        <ul className="absolute z-20 w-full bg-black/90 backdrop-blur-md border border-white/20 rounded-lg mt-2 max-h-60 overflow-y-auto shadow-2xl">
           {filteredSubjects.map(subject => (
             <li 
               key={subject}
-              className="px-4 py-2 text-white hover:bg-gray-700 cursor-pointer"
+              className="px-4 py-3 text-white hover:bg-cyber-lime/20 hover:text-cyber-lime cursor-pointer transition-all duration-200 border-b border-white/10 last:border-b-0"
               onMouseDown={() => {
                 onSubjectSelect(subject);
                 setShowSuggestions(false);
