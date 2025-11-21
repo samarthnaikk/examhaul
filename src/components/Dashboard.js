@@ -157,9 +157,7 @@ const Dashboard = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Find Your Papers
               </h2>
-              <p className="text-white/70 text-lg">
-                Search through VIT Vellore's past papers archive
-              </p>
+              {/* Subtitle removed as placeholder now rotates in the search bar */}
             </div>
             
             <div className="w-full max-w-5xl mx-auto mt-4">
