@@ -63,9 +63,7 @@ const Dashboard = () => {
                 <h1 className="text-2xl font-bold text-paper-smoke">ExamHaul</h1>
               </div>
             </div>
-            <div className="hidden md:block">
-              <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            </div>
+            {/* Search bar removed from header */}
           </div>
         </div>
       </header>

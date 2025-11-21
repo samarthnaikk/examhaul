@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Search, Download, CheckCircle, XCircle } from 'lucide-react';
 
 const rotatingPlaceholders = [
-  "Search through VIT Vellore's past papers archive",
-  "Search papers, subjects, topics...",
-  "Find exam questions, solutions, and more",
-  "Type a keyword to get started",
-  "Explore previous year papers by subject or year"
+  "Search exam papers, subjects, or topics...",
+  "Find past year questions instantly...",
+  "Discover papers by subject or semester...",
+  "Start typing to explore the archive...",
+  "Search solved and unsolved papers..."
 ];
 
 const SearchBar = ({ searchTerm, setSearchTerm }) => {
@@ -16,7 +16,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
   const intervalRef = useRef();
   const typingRef = useRef();
 
-  // Typing animation effect
+  // Typing animation effect (slower)
   useEffect(() => {
     if (!searchTerm) {
       setTyped('');
@@ -34,7 +34,7 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
             return currentText;
           }
         });
-      }, 40); // typing speed
+      }, 80); // slower typing speed
     }
     return () => clearInterval(typingRef.current);
   }, [placeholderIdx, searchTerm]);
@@ -53,13 +53,16 @@ const SearchBar = ({ searchTerm, setSearchTerm }) => {
 
   return (
     <div className="relative flex-1 max-w-3xl mx-auto w-full">
-      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center pointer-events-none z-10">
+        <Search className="text-white/70 w-6 h-6" />
+      </span>
       <input
         type="text"
         placeholder={searchTerm ? '' : typed}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="input-field w-full pl-10 pr-4"
+        className="input-field w-full pl-14 pr-4 bg-transparent text-white placeholder-white/60"
+        style={{ minHeight: '3.25rem' }}
       />
     </div>
   );
