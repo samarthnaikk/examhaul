@@ -110,10 +110,16 @@ const PaperCard = ({ paper }) => {
       </div>
 
       <div className="flex justify-between items-center">
-        <button className="btn-secondary flex items-center space-x-2">
+        <button 
+          onClick={() => paper.url && window.open(paper.url, '_blank')}
+          className="btn-secondary flex items-center space-x-2"
+        >
           <span>View Paper</span>
         </button>
-        <button className="btn-primary flex items-center space-x-2">
+        <button 
+          onClick={() => paper.url && window.open(paper.url, '_blank')}
+          className="btn-primary flex items-center space-x-2"
+        >
           <Download className="w-4 h-4" />
           <span>Download</span>
         </button>
