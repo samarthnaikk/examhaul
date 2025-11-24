@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Search, CheckCircle } from 'lucide-react';
 import PDFViewer from './PDFViewer';
+import 'katex/dist/katex.min.css';
+import { InlineMath, BlockMath } from 'react-katex';
 
 const rotatingPlaceholders = [
   "Search exam papers, subjects, or topics...",
@@ -235,8 +237,15 @@ const ChatArea = ({ paperUrl }) => {
         
         const data = await response.text();
         
-        // Add AI response to chat
-        setMessages(prev => [...prev, { text: data, type: 'ai' }]);
+        try {
+          // Try to parse as JSON to extract LaTeX
+          const jsonData = JSON.parse(data);
+          const latexContent = jsonData.latex || data;
+          setMessages(prev => [...prev, { text: latexContent, type: 'ai', isLatex: true }]);
+        } catch {
+          // If not JSON, treat as plain text
+          setMessages(prev => [...prev, { text: data, type: 'ai', isLatex: false }]);
+        }
       } catch (error) {
         console.error('Error:', error);
         setMessages(prev => [...prev, { text: 'Sorry, there was an error processing your request.', type: 'ai' }]);
@@ -262,7 +271,11 @@ const ChatArea = ({ paperUrl }) => {
                   ? 'bg-cyber-lime/20 text-white' 
                   : 'bg-gray-600/40 text-white/90'
               }`}>
-                {msg.text}
+                {msg.isLatex ? (
+                  <LaTeXRenderer content={msg.text} />
+                ) : (
+                  msg.text
+                )}
               </div>
             </div>
           ))
@@ -305,6 +318,106 @@ const ChatArea = ({ paperUrl }) => {
           </svg>
         </button>
       </div>
+    </div>
+  );
+};
+
+// LaTeX Renderer component
+const LaTeXRenderer = ({ content }) => {
+  // Clean up LaTeX document structure and prepare for rendering
+  const preprocessLatex = (text) => {
+    // Remove document structure commands
+    text = text.replace(/\\documentclass\{[^}]*\}/g, '');
+    text = text.replace(/\\usepackage\{[^}]*\}/g, '');
+    text = text.replace(/\\begin\{document\}/g, '');
+    text = text.replace(/\\end\{document\}/g, '');
+    
+    // Convert align* environments to regular math blocks
+    text = text.replace(/\\begin\{align\*\}([\s\S]*?)\\end\{align\*\}/g, '$$$$1$$');
+    
+    // Convert common LaTeX text commands to plain text
+    text = text.replace(/\\text\{([^}]*)\}/g, '$1');
+    
+    return text.trim();
+  };
+  
+  // Split content by LaTeX delimiters and render accordingly
+  const renderContent = (text) => {
+    text = preprocessLatex(text);
+    
+    // Handle block math ($$...$$)
+    const blockMathRegex = /\$\$([\s\S]*?)\$\$/g;
+    // Handle inline math ($...$)  
+    const inlineMathRegex = /\$([^$\n]*?)\$/g;
+    
+    let parts = [];
+    let lastIndex = 0;
+    let match;
+    
+    // Find all block math first
+    while ((match = blockMathRegex.exec(text)) !== null) {
+      // Add text before the match
+      if (match.index > lastIndex) {
+        const beforeText = text.slice(lastIndex, match.index);
+        parts.push({ type: 'text', content: beforeText });
+      }
+      // Add the block math
+      parts.push({ type: 'block', content: match[1].trim() });
+      lastIndex = match.index + match[0].length;
+    }
+    
+    // Add remaining text
+    if (lastIndex < text.length) {
+      const remainingText = text.slice(lastIndex);
+      parts.push({ type: 'text', content: remainingText });
+    }
+    
+    // Now process inline math in text parts
+    const finalParts = [];
+    parts.forEach(part => {
+      if (part.type === 'text') {
+        let textLastIndex = 0;
+        let textMatch;
+        const inlineRegex = new RegExp(inlineMathRegex.source, 'g');
+        
+        while ((textMatch = inlineRegex.exec(part.content)) !== null) {
+          if (textMatch.index > textLastIndex) {
+            finalParts.push({ type: 'text', content: part.content.slice(textLastIndex, textMatch.index) });
+          }
+          finalParts.push({ type: 'inline', content: textMatch[1] });
+          textLastIndex = textMatch.index + textMatch[0].length;
+        }
+        
+        if (textLastIndex < part.content.length) {
+          finalParts.push({ type: 'text', content: part.content.slice(textLastIndex) });
+        }
+      } else {
+        finalParts.push(part);
+      }
+    });
+    
+    return finalParts;
+  };
+
+  const parts = renderContent(content);
+  
+  return (
+    <div className="latex-content">
+      {parts.map((part, idx) => {
+        try {
+          if (part.type === 'block') {
+            return <div key={idx} className="my-2"><BlockMath math={part.content} /></div>;
+          } else if (part.type === 'inline') {
+            return <InlineMath key={idx} math={part.content} />;
+          } else {
+            return <span key={idx} style={{ whiteSpace: 'pre-wrap' }}>{part.content}</span>;
+          }
+        } catch (error) {
+          // If LaTeX rendering fails, show the raw content
+          console.warn('LaTeX rendering error:', error);
+          return <span key={idx} style={{ whiteSpace: 'pre-wrap' }}>{part.content}</span>;
+        }
+      })}
     </div>
   );
 };
