@@ -193,13 +193,21 @@ const PaperCard = ({ paper }) => {
             {/* Chat Placeholder - 20% */}
             <div className="w-2/5 h-full flex flex-col items-center justify-center bg-[#1a1a1a]">
               <div className="text-cyber-pink font-bold text-lg mb-4">Gemini Chat</div>
-              <div className="w-11/12 h-3/4 bg-[#222] rounded-lg border border-white/10 flex items-center justify-center text-white/60">
+              <div className="w-11/12 h-3/5 bg-[#222] rounded-lg border border-white/10 flex items-center justify-center text-white/60 mb-4">
                 <span>Chat UI coming soon...</span>
+              </div>
+              <div className="w-11/12 h-1/5 bg-[#222] rounded-lg border border-white/10 flex items-center px-3">
+                <input
+                  type="text"
+                  className="w-full bg-transparent text-white px-2 py-1 focus:outline-none"
+                  placeholder="Type your message..."
+                  disabled
+                />
               </div>
             </div>
             {/* Close Button */}
             <button
-              className="absolute top-4 right-4 text-white bg-cyber-pink px-3 py-1 rounded-lg font-bold shadow hover:bg-cyber-lime transition-all duration-200"
+              className="absolute top-4 right-4 text-white bg-cyber-pink px-3 py-1 rounded-lg font-bold shadow transition-all duration-200 hover:bg-cyber-lime hover:text-black"
               onClick={() => setIsGeminiOpen(false)}
             >
               Close
