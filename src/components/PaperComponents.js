@@ -179,7 +179,7 @@ const PaperCard = ({ paper }) => {
       {/* Gemini Split Preview/Chat UI */}
       {isGeminiOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-          <div className="bg-[#181818] rounded-xl shadow-2xl flex w-[80vw] h-[70vh] overflow-hidden relative">
+          <div className="bg-[#181818] rounded-xl shadow-2xl flex w-[95vw] h-[90vh] overflow-hidden relative">
             {/* PDF Preview - 80% */}
             <div className="w-4/5 h-full flex items-center justify-center bg-[#222] border-r border-white/10">
               <iframe
