@@ -129,13 +129,15 @@ const PaperCard = ({ paper }) => {
             <h3 className="text-xl font-bold text-white mb-2">{paper.title}</h3>
             <p className="text-dusk-teal font-semibold text-lg">{paper.subject}</p>
             <div className="my-4 flex justify-center">
-              <iframe
-                src={paper.url + '#page=1'}
-                title={paper.title + ' preview'}
-                className="rounded-lg border border-white/10 shadow-md"
-                style={{ width: '160px', height: '220px', background: '#222' }}
-                frameBorder="0"
-              />
+              <div style={{ width: '96%', height: '260px', overflow: 'auto' }} className="relative rounded-lg border border-white/10 shadow-md bg-[#222]">
+                <iframe
+                  src={paper.url + '#page=1'}
+                  title={paper.title + ' preview'}
+                  className="w-full h-full"
+                  style={{ pointerEvents: 'auto', minHeight: '400px', border: 'none' }}
+                  frameBorder="0"
+                />
+              </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
