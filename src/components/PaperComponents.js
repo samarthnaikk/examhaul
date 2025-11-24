@@ -201,8 +201,25 @@ const PaperCard = ({ paper }) => {
                   type="text"
                   className="w-full bg-transparent text-white px-2 py-1 focus:outline-none"
                   placeholder="Type your message..."
-                  disabled
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                      console.log(e.target.value);
+                      e.target.value = '';
+                    }
+                  }}
                 />
+                <button
+                  type="button"
+                  className="ml-2 flex items-center justify-center text-cyber-lime hover:text-cyber-pink"
+                  tabIndex={-1}
+                  aria-label="Send"
+                  style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                >
+                  {/* Paper plane send icon */}
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                  </svg>
+                </button>
               </div>
             </div>
             {/* Close Button */}
