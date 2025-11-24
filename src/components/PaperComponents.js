@@ -137,6 +137,7 @@ const PaperCard = ({ paper }) => {
           <span className="badge-secondary">{paper.year}</span>
           <span className="badge-secondary">{paper.semester}</span>
           <span className="badge-secondary">{paper.examType}</span>
+          {paper.slot && <span className="badge-secondary">Slot {paper.slot}</span>}
         </div>
 
         <div className="flex justify-between items-center">

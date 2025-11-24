@@ -34,12 +34,13 @@ const Dashboard = () => {
         const urlParts = item.url.split('?');
         const fileName = urlParts[0].split('/').pop();
         return {
-          id: item.id,
+          id: item.id || index,
           title: fileName.replace('.pdf', ''),
-          subject: subject,
-          year: new Date().getFullYear(), // Default to current year or extract from filename
-          semester: 'General',
-          examType: 'Past Paper',
+          subject: item.subject || subject,
+          year: item.year || new Date().getFullYear(),
+          semester: item.sem || 'General',
+          examType: item.exam || 'Past Paper',
+          slot: item.slot || null,
           downloadCount: Math.floor(Math.random() * 1000), // Random for now
           hasSolution: true, // All papers have solutions
           tags: ['pdf', 'exam'],
