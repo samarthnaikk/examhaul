@@ -9,21 +9,6 @@ A comprehensive, organized archive of VIT Vellore's past question papers, with s
 - **Search & Filter:** Quickly find papers or questions by subject, year, or topic (planned).
 - **Open Source:** Contributions welcome for adding more papers, solutions, or features.
 
-
-## Getting Started
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/yourusername/vit-past-papers.git
-   cd vit-past-papers
-   ```
-2. **Browse the folders:**
-   - `papers/` for PDFs
-   - `solutions/` for solutions
-   - `similar_questions/` for practice
-3. **Contribute:**
-   - Add new papers, solutions, or similar questions via pull requests.
-
-
 ## License
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
