@@ -181,7 +181,7 @@ const PaperCard = ({ paper }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
           <div className="bg-[#181818] rounded-xl shadow-2xl flex w-[95vw] h-[90vh] overflow-hidden relative">
             {/* PDF Preview - 80% */}
-            <div className="w-4/5 h-full flex items-center justify-center bg-[#222] border-r border-white/10">
+            <div className="w-3/5 h-full flex items-center justify-center bg-[#222] border-r border-white/10">
               <iframe
                 src={paper.url + '#page=1'}
                 title={paper.title + ' Gemini preview'}
@@ -191,7 +191,7 @@ const PaperCard = ({ paper }) => {
               />
             </div>
             {/* Chat Placeholder - 20% */}
-            <div className="w-1/5 h-full flex flex-col items-center justify-center bg-[#1a1a1a]">
+            <div className="w-2/5 h-full flex flex-col items-center justify-center bg-[#1a1a1a]">
               <div className="text-cyber-pink font-bold text-lg mb-4">Gemini Chat</div>
               <div className="w-11/12 h-3/4 bg-[#222] rounded-lg border border-white/10 flex items-center justify-center text-white/60">
                 <span>Chat UI coming soon...</span>
