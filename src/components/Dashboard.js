@@ -24,18 +24,23 @@ const Dashboard = () => {
     
     try {
       const response = await fetch(`https://examhaul-backend.vercel.app/search?q=${encodeURIComponent(subject)}`);
+      
       if (!response.ok) {
-        throw new Error('Failed to fetch papers');
+        throw new Error(`Failed to fetch papers: ${response.status}`);
       }
       const data = await response.json();
       
       // Transform API data to match our component structure
       const transformedPapers = data.map((item, index) => {
-        const urlParts = item.url.split('?');
-        const fileName = urlParts[0].split('/').pop();
+        // Generate a more descriptive title
+        const examType = item.exam || 'Paper';
+        const year = item.year || new Date().getFullYear();
+        const slot = item.slot ? ` - Slot ${item.slot}` : '';
+        const title = `${examType} ${year}${slot}`;
+        
         return {
-          id: item.id || index,
-          title: fileName.replace('.pdf', ''),
+          id: item.id || `paper_${index}`,
+          title: title,
           subject: item.subject || subject,
           year: item.year || new Date().getFullYear(),
           semester: item.sem || 'General',
@@ -64,15 +69,20 @@ const Dashboard = () => {
   };
 
   const filteredPapers = useMemo(() => {
-    return apiPapers.filter(paper => {
+    const filtered = apiPapers.filter(paper => {
       const matchesSearch = !searchTerm || 
                            paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            paper.subject.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesSubject = selectedSubject === 'All Subjects' || paper.subject === selectedSubject;
+      // More flexible subject matching - check if the selected subject is contained in the paper subject
+      const matchesSubject = selectedSubject === 'All Subjects' || 
+                            paper.subject.toLowerCase().includes(selectedSubject.toLowerCase()) ||
+                            selectedSubject.toLowerCase().includes(paper.subject.toLowerCase());
       
       return matchesSearch && matchesSubject;
     });
+    
+    return filtered;
   }, [searchTerm, apiPapers, selectedSubject]);
 
   const stats = {
