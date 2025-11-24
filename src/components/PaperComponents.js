@@ -190,38 +190,8 @@ const PaperCard = ({ paper }) => {
                 frameBorder="0"
               />
             </div>
-            {/* Chat Placeholder - 20% */}
-            <div className="w-2/5 h-full flex flex-col items-center justify-center bg-[#1a1a1a]">
-              <div className="text-cyber-pink font-bold text-lg mb-4">Gemini Chat</div>
-              <div className="w-11/12 h-3/5 bg-[#222] rounded-lg border border-white/10 flex items-center justify-center text-white/60 mb-4">
-                <span>Chat UI coming soon...</span>
-              </div>
-              <div className="w-11/12 h-1/5 bg-[#222] rounded-lg border border-white/10 flex items-center px-3">
-                <input
-                  type="text"
-                  className="w-full bg-transparent text-white px-2 py-1 focus:outline-none"
-                  placeholder="Type your message..."
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                      console.log(e.target.value);
-                      e.target.value = '';
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  className="ml-2 flex items-center justify-center text-cyber-lime hover:text-cyber-pink"
-                  tabIndex={-1}
-                  aria-label="Send"
-                  style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-                >
-                  {/* Paper plane send icon */}
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            {/* Chat Area - 20% */}
+            <ChatArea />
             {/* Close Button */}
             <button
               className="absolute top-4 right-4 text-white bg-cyber-pink px-3 py-1 rounded-lg font-bold shadow transition-all duration-200 hover:bg-cyber-lime hover:text-black"
@@ -233,6 +203,67 @@ const PaperCard = ({ paper }) => {
         </div>
       )}
     </>
+  );
+};
+
+// ChatArea component for handling chat functionality
+const ChatArea = () => {
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleSend = () => {
+    if (inputValue.trim() !== "") {
+      setMessages(prev => [...prev, inputValue]);
+      setInputValue("");
+    }
+  };
+
+  return (
+    <div className="w-2/5 h-full flex flex-col items-center justify-center bg-[#1a1a1a]">
+      <div className="text-cyber-pink font-bold text-lg mb-4">Gemini Chat</div>
+      <div className="w-11/12 h-3/5 bg-[#222] rounded-lg border border-white/10 flex flex-col items-start justify-start text-white/60 mb-4 p-3 overflow-y-auto">
+        {messages.length === 0 ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <span>Chat UI coming soon...</span>
+          </div>
+        ) : (
+          messages.map((msg, idx) => (
+            <div key={idx} className="mb-2 w-full">
+              <div className="bg-cyber-lime/20 text-white px-3 py-2 rounded-lg inline-block max-w-full break-words">
+                {msg}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+      <div className="w-11/12 h-1/5 bg-[#222] rounded-lg border border-white/10 flex items-center px-3">
+        <input
+          type="text"
+          className="w-full bg-transparent text-white px-2 py-1 focus:outline-none"
+          placeholder="Type your message..."
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && inputValue.trim() !== '') {
+              handleSend();
+            }
+          }}
+        />
+        <button
+          type="button"
+          className="ml-2 flex items-center justify-center text-cyber-lime hover:text-cyber-pink"
+          tabIndex={-1}
+          aria-label="Send"
+          style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+          onClick={handleSend}
+        >
+          {/* Paper plane send icon */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 };
 
