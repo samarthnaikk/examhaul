@@ -224,11 +224,11 @@ const ChatArea = () => {
       <div className="w-11/12 h-3/5 bg-[#222] rounded-lg border border-white/10 flex flex-col items-start justify-start text-white/60 mb-4 p-3 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="w-full h-full flex items-center justify-center">
-            <span>Chat UI coming soon...</span>
+            <span>Enter to start the conversation</span>
           </div>
         ) : (
           messages.map((msg, idx) => (
-            <div key={idx} className="mb-2 w-full">
+            <div key={idx} className="mb-2 w-full flex justify-end">
               <div className="bg-cyber-lime/20 text-white px-3 py-2 rounded-lg inline-block max-w-full break-words">
                 {msg}
               </div>
@@ -242,6 +242,7 @@ const ChatArea = () => {
           className="w-full bg-transparent text-white px-2 py-1 focus:outline-none"
           placeholder="Type your message..."
           value={inputValue}
+          maxLength={100}
           onChange={e => setInputValue(e.target.value)}
           onKeyDown={e => {
             if (e.key === 'Enter' && inputValue.trim() !== '') {
