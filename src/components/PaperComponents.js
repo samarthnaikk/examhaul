@@ -243,12 +243,12 @@ const ChatArea = ({ paperUrl }) => {
           const latexContent = jsonData.latex || data;
           setMessages(prev => [...prev, { text: latexContent, type: 'ai', isLatex: true }]);
         } catch {
-          // If not JSON, treat as plain text
-          setMessages(prev => [...prev, { text: data, type: 'ai', isLatex: false }]);
+          // If not JSON, treat as LaTeX text anyway
+          setMessages(prev => [...prev, { text: data, type: 'ai', isLatex: true }]);
         }
       } catch (error) {
         console.error('Error:', error);
-        setMessages(prev => [...prev, { text: 'Sorry, there was an error processing your request.', type: 'ai' }]);
+        setMessages(prev => [...prev, { text: 'Sorry, there was an error processing your request.', type: 'ai', isLatex: true }]);
       } finally {
         setIsLoading(false);
       }
@@ -332,11 +332,19 @@ const LaTeXRenderer = ({ content }) => {
     text = text.replace(/\\begin\{document\}/g, '');
     text = text.replace(/\\end\{document\}/g, '');
     
+    // Remove numbered line prefixes like "1$", "2$", etc.
+    text = text.replace(/^\d+\$/gm, '');
+    
+    // Remove enumerate environments (just remove the tags, keep content)
+    text = text.replace(/\\begin\{enumerate\}/g, '');
+    text = text.replace(/\\end\{enumerate\}/g, '');
+    text = text.replace(/\\item\s*/g, '\n• ');
+    
     // Convert align* environments to regular math blocks
-    text = text.replace(/\\begin\{align\*\}([\s\S]*?)\\end\{align\*\}/g, '$$$$1$$');
+    //text = text.replace(/\\begin\{align\*\}([\s\S]*?)\\end\{align\*\}/g, '$$$$1$$');
     
     // Convert common LaTeX text commands to plain text
-    text = text.replace(/\\text\{([^}]*)\}/g, '$1');
+    //text = text.replace(/\\text\{([^}]*)\}/g, '$1');
     
     return text.trim();
   };
