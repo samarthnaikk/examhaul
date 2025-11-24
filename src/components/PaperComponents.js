@@ -191,7 +191,7 @@ const PaperCard = ({ paper }) => {
               />
             </div>
             {/* Chat Area - 20% */}
-            <ChatArea />
+            <ChatArea paperUrl={paper.url} />
             {/* Close Button */}
             <button
               className="absolute top-4 right-4 text-white bg-cyber-pink px-3 py-1 rounded-lg font-bold shadow transition-all duration-200 hover:bg-cyber-lime hover:text-black"
@@ -207,14 +207,42 @@ const PaperCard = ({ paper }) => {
 };
 
 // ChatArea component for handling chat functionality
-const ChatArea = () => {
+const ChatArea = ({ paperUrl }) => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (inputValue.trim() !== "") {
-      setMessages(prev => [...prev, inputValue]);
+      const userMessage = inputValue;
+      // Add user message to chat
+      setMessages(prev => [...prev, { text: userMessage, type: 'user' }]);
       setInputValue("");
+      setIsLoading(true);
+      
+      try {
+        // Send API request
+        const response = await fetch('https://examhaul-backend.vercel.app/solve', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            link: paperUrl,
+            prompt: userMessage
+          })
+        });
+        
+        const data = await response.text();
+        
+        // Add AI response to chat
+        setMessages(prev => [...prev, { text: data, type: 'ai' }]);
+      } catch (error) {
+        console.error('Error:', error);
+        setMessages(prev => [...prev, { text: 'Sorry, there was an error processing your request.', type: 'ai' }]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -228,35 +256,48 @@ const ChatArea = () => {
           </div>
         ) : (
           messages.map((msg, idx) => (
-            <div key={idx} className="mb-2 w-full flex justify-end">
-              <div className="bg-cyber-lime/20 text-white px-3 py-2 rounded-lg inline-block max-w-full break-words">
-                {msg}
+            <div key={idx} className={`mb-2 w-full flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`px-3 py-2 rounded-lg inline-block max-w-full break-words ${
+                msg.type === 'user' 
+                  ? 'bg-cyber-lime/20 text-white' 
+                  : 'bg-gray-600/40 text-white/90'
+              }`}>
+                {msg.text}
               </div>
             </div>
           ))
+        )}
+        {isLoading && (
+          <div className="mb-2 w-full flex justify-start">
+            <div className="bg-gray-600/40 text-white/90 px-3 py-2 rounded-lg inline-block">
+              <span className="animate-pulse">AI is typing...</span>
+            </div>
+          </div>
         )}
       </div>
       <div className="w-11/12 h-1/5 bg-[#222] rounded-lg border border-white/10 flex items-center px-3">
         <input
           type="text"
           className="w-full bg-transparent text-white px-2 py-1 focus:outline-none"
-          placeholder="Type your message..."
+          placeholder={isLoading ? "AI is thinking..." : "Type your message..."}
           value={inputValue}
           maxLength={100}
+          disabled={isLoading}
           onChange={e => setInputValue(e.target.value)}
           onKeyDown={e => {
-            if (e.key === 'Enter' && inputValue.trim() !== '') {
+            if (e.key === 'Enter' && inputValue.trim() !== '' && !isLoading) {
               handleSend();
             }
           }}
         />
         <button
           type="button"
-          className="ml-2 flex items-center justify-center text-cyber-lime hover:text-cyber-pink"
+          className={`ml-2 flex items-center justify-center ${isLoading ? 'text-gray-500' : 'text-cyber-lime hover:text-cyber-pink'}`}
           tabIndex={-1}
           aria-label="Send"
-          style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+          style={{ background: 'none', border: 'none', padding: 0, cursor: isLoading ? 'not-allowed' : 'pointer' }}
           onClick={handleSend}
+          disabled={isLoading}
         >
           {/* Paper plane send icon */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
