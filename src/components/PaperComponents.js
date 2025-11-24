@@ -161,11 +161,10 @@ const PaperCard = ({ paper }) => {
           </button>
           <button
             onClick={() => setIsGeminiOpen(true)}
-            className="ml-auto btn-secondary flex items-center space-x-2 bg-gradient-to-r from-cyber-lime to-cyber-pink text-black font-bold px-4 py-2 rounded-lg shadow hover:scale-105 transition-all duration-200"
-            style={{ marginLeft: 'auto' }}
+            style={{ marginLeft: 'auto', background: 'none', border: 'none', padding: 0, cursor: 'pointer', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            aria-label="Gemini"
           >
-            <span>Gemini</span>
-            {/* You can add an icon here if desired */}
+            <img src="/gemini_logo.webp" alt="Gemini Logo" style={{ width: '32px', height: '32px', display: 'block' }} />
           </button>
         </div>
       </div>
