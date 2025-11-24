@@ -120,6 +120,7 @@ const FilterDropdown = ({ label, value, onChange, options }) => {
 
 const PaperCard = ({ paper }) => {
   const [isPDFViewerOpen, setIsPDFViewerOpen] = useState(false);
+  const [isGeminiOpen, setIsGeminiOpen] = useState(false);
 
   return (
     <>
@@ -151,12 +152,20 @@ const PaperCard = ({ paper }) => {
           {paper.slot && <span className="badge-secondary">Slot {paper.slot}</span>}
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between w-full">
           <button 
             onClick={() => setIsPDFViewerOpen(true)}
             className="btn-secondary flex items-center space-x-2"
           >
             <span>View Paper</span>
+          </button>
+          <button
+            onClick={() => setIsGeminiOpen(true)}
+            className="ml-auto btn-secondary flex items-center space-x-2 bg-gradient-to-r from-cyber-lime to-cyber-pink text-black font-bold px-4 py-2 rounded-lg shadow hover:scale-105 transition-all duration-200"
+            style={{ marginLeft: 'auto' }}
+          >
+            <span>Gemini</span>
+            {/* You can add an icon here if desired */}
           </button>
         </div>
       </div>
@@ -167,6 +176,38 @@ const PaperCard = ({ paper }) => {
         pdfUrl={paper.url}
         title={paper.title}
       />
+
+      {/* Gemini Split Preview/Chat UI */}
+      {isGeminiOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+          <div className="bg-[#181818] rounded-xl shadow-2xl flex w-[80vw] h-[70vh] overflow-hidden relative">
+            {/* PDF Preview - 80% */}
+            <div className="w-4/5 h-full flex items-center justify-center bg-[#222] border-r border-white/10">
+              <iframe
+                src={paper.url + '#page=1'}
+                title={paper.title + ' Gemini preview'}
+                className="w-full h-full"
+                style={{ pointerEvents: 'auto', border: 'none' }}
+                frameBorder="0"
+              />
+            </div>
+            {/* Chat Placeholder - 20% */}
+            <div className="w-1/5 h-full flex flex-col items-center justify-center bg-[#1a1a1a]">
+              <div className="text-cyber-pink font-bold text-lg mb-4">Gemini Chat</div>
+              <div className="w-11/12 h-3/4 bg-[#222] rounded-lg border border-white/10 flex items-center justify-center text-white/60">
+                <span>Chat UI coming soon...</span>
+              </div>
+            </div>
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 text-white bg-cyber-pink px-3 py-1 rounded-lg font-bold shadow hover:bg-cyber-lime transition-all duration-200"
+              onClick={() => setIsGeminiOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
