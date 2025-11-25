@@ -237,17 +237,19 @@ const ChatArea = ({ paperUrl }) => {
         
         const data = await response.text();
         
+        // ALL AI responses should be treated as LaTeX content according to backend rules
         try {
           // Try to parse as JSON to extract LaTeX
           const jsonData = JSON.parse(data);
           const latexContent = jsonData.latex || data;
           setMessages(prev => [...prev, { text: latexContent, type: 'ai', isLatex: true }]);
         } catch {
-          // If not JSON, treat as LaTeX text anyway
+          // If not JSON, treat as LaTeX content (backend follows strict LaTeX format rules)
           setMessages(prev => [...prev, { text: data, type: 'ai', isLatex: true }]);
         }
       } catch (error) {
         console.error('Error:', error);
+        // Even error messages should be processed as LaTeX to maintain consistency
         setMessages(prev => [...prev, { text: 'Sorry, there was an error processing your request.', type: 'ai', isLatex: true }]);
       } finally {
         setIsLoading(false);
@@ -326,25 +328,51 @@ const ChatArea = ({ paperUrl }) => {
 const LaTeXRenderer = ({ content }) => {
   // Clean up LaTeX document structure and prepare for rendering
   const preprocessLatex = (text) => {
-    // Remove document structure commands
+    if (!text || typeof text !== 'string') {
+      return '';
+    }
+    
+    // Remove document structure commands (not supported by KaTeX)
     text = text.replace(/\\documentclass\{[^}]*\}/g, '');
     text = text.replace(/\\usepackage\{[^}]*\}/g, '');
     text = text.replace(/\\begin\{document\}/g, '');
     text = text.replace(/\\end\{document\}/g, '');
+    text = text.replace(/\\maketitle/g, '');
+    text = text.replace(/\\title\{[^}]*\}/g, '');
+    text = text.replace(/\\author\{[^}]*\}/g, '');
+    text = text.replace(/\\date\{[^}]*\}/g, '');
     
     // Remove numbered line prefixes like "1$", "2$", etc.
     text = text.replace(/^\d+\$/gm, '');
     
-    // Remove enumerate environments (just remove the tags, keep content)
+    // Handle enumerate and itemize environments
     text = text.replace(/\\begin\{enumerate\}/g, '');
     text = text.replace(/\\end\{enumerate\}/g, '');
+    text = text.replace(/\\begin\{itemize\}/g, '');
+    text = text.replace(/\\end\{itemize\}/g, '');
     text = text.replace(/\\item\s*/g, '\n• ');
     
-    // Convert align* environments to regular math blocks
-    //text = text.replace(/\\begin\{align\*\}([\s\S]*?)\\end\{align\*\}/g, '$$$$1$$');
+    // Convert align* environments to aligned within math blocks
+    text = text.replace(/\\begin\{align\*\}/g, '$$\\begin{aligned}');
+    text = text.replace(/\\end\{align\*\}/g, '\\end{aligned}$$');
     
-    // Convert common LaTeX text commands to plain text
-    //text = text.replace(/\\text\{([^}]*)\}/g, '$1');
+    // Convert align environments to aligned within math blocks
+    text = text.replace(/\\begin\{align\}/g, '$$\\begin{aligned}');
+    text = text.replace(/\\end\{align\}/g, '\\end{aligned}$$');
+    
+    // Convert equation environments to math blocks
+    text = text.replace(/\\begin\{equation\}/g, '$$');
+    text = text.replace(/\\end\{equation\}/g, '$$');
+    text = text.replace(/\\begin\{equation\*\}/g, '$$');
+    text = text.replace(/\\end\{equation\*\}/g, '$$');
+    
+    // Remove unsupported commands (replace with supported alternatives or remove)
+    text = text.replace(/\\eqref\{[^}]*\}/g, '');
+    text = text.replace(/\\label\{[^}]*\}/g, '');
+    text = text.replace(/\\ref\{[^}]*\}/g, '');
+    
+    // Clean up multiple consecutive newlines
+    text = text.replace(/\n\s*\n\s*\n/g, '\n\n');
     
     return text.trim();
   };
@@ -353,31 +381,45 @@ const LaTeXRenderer = ({ content }) => {
   const renderContent = (text) => {
     text = preprocessLatex(text);
     
-    // Handle block math ($$...$$)
+    if (!text) {
+      return [{ type: 'text', content: '' }];
+    }
+    
+    // Handle block math ($$...$$) - more robust regex
     const blockMathRegex = /\$\$([\s\S]*?)\$\$/g;
-    // Handle inline math ($...$)  
-    const inlineMathRegex = /\$([^$\n]*?)\$/g;
+    // Handle inline math ($...$) - avoid matching across multiple lines for safety  
+    const inlineMathRegex = /\$([^$\n\r]+?)\$/g;
     
     let parts = [];
     let lastIndex = 0;
     let match;
+    
+    // Reset regex state
+    blockMathRegex.lastIndex = 0;
     
     // Find all block math first
     while ((match = blockMathRegex.exec(text)) !== null) {
       // Add text before the match
       if (match.index > lastIndex) {
         const beforeText = text.slice(lastIndex, match.index);
-        parts.push({ type: 'text', content: beforeText });
+        if (beforeText.trim()) {
+          parts.push({ type: 'text', content: beforeText });
+        }
       }
       // Add the block math
-      parts.push({ type: 'block', content: match[1].trim() });
+      const mathContent = match[1].trim();
+      if (mathContent) {
+        parts.push({ type: 'block', content: mathContent });
+      }
       lastIndex = match.index + match[0].length;
     }
     
     // Add remaining text
     if (lastIndex < text.length) {
       const remainingText = text.slice(lastIndex);
-      parts.push({ type: 'text', content: remainingText });
+      if (remainingText.trim()) {
+        parts.push({ type: 'text', content: remainingText });
+      }
     }
     
     // Now process inline math in text parts
@@ -390,19 +432,33 @@ const LaTeXRenderer = ({ content }) => {
         
         while ((textMatch = inlineRegex.exec(part.content)) !== null) {
           if (textMatch.index > textLastIndex) {
-            finalParts.push({ type: 'text', content: part.content.slice(textLastIndex, textMatch.index) });
+            const textContent = part.content.slice(textLastIndex, textMatch.index);
+            if (textContent) {
+              finalParts.push({ type: 'text', content: textContent });
+            }
           }
-          finalParts.push({ type: 'inline', content: textMatch[1] });
+          const inlineMathContent = textMatch[1].trim();
+          if (inlineMathContent) {
+            finalParts.push({ type: 'inline', content: inlineMathContent });
+          }
           textLastIndex = textMatch.index + textMatch[0].length;
         }
         
         if (textLastIndex < part.content.length) {
-          finalParts.push({ type: 'text', content: part.content.slice(textLastIndex) });
+          const remainingTextContent = part.content.slice(textLastIndex);
+          if (remainingTextContent) {
+            finalParts.push({ type: 'text', content: remainingTextContent });
+          }
         }
       } else {
         finalParts.push(part);
       }
     });
+    
+    // If no parts were generated, return the original text
+    if (finalParts.length === 0) {
+      return [{ type: 'text', content: text }];
+    }
     
     return finalParts;
   };
@@ -413,17 +469,40 @@ const LaTeXRenderer = ({ content }) => {
     <div className="latex-content">
       {parts.map((part, idx) => {
         try {
-          if (part.type === 'block') {
-            return <div key={idx} className="my-2"><BlockMath math={part.content} /></div>;
-          } else if (part.type === 'inline') {
-            return <InlineMath key={idx} math={part.content} />;
-          } else {
+          if (part.type === 'block' && part.content) {
+            return (
+              <div key={idx} className="my-2">
+                <BlockMath 
+                  math={part.content} 
+                  renderError={(error) => (
+                    <div className="text-red-400 text-sm">
+                      LaTeX Error: {part.content}
+                    </div>
+                  )}
+                />
+              </div>
+            );
+          } else if (part.type === 'inline' && part.content) {
+            return (
+              <InlineMath 
+                key={idx} 
+                math={part.content}
+                renderError={(error) => (
+                  <span className="text-red-400">${part.content}$</span>
+                )}
+              />
+            );
+          } else if (part.content) {
             return <span key={idx} style={{ whiteSpace: 'pre-wrap' }}>{part.content}</span>;
           }
+          return null;
         } catch (error) {
-          // If LaTeX rendering fails, show the raw content
+          // If LaTeX rendering fails, show the raw content to ensure message is always visible
           console.warn('LaTeX rendering error:', error);
-          return <span key={idx} style={{ whiteSpace: 'pre-wrap' }}>{part.content}</span>;
+          const displayContent = part.type === 'block' ? `$$${part.content}$$` : 
+                               part.type === 'inline' ? `$${part.content}$` : 
+                               part.content;
+          return <span key={idx} style={{ whiteSpace: 'pre-wrap', color: '#fbbf24' }}>{displayContent}</span>;
         }
       })}
     </div>
