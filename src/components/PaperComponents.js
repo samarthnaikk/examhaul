@@ -268,11 +268,18 @@ const ChatArea = ({ paperUrl }) => {
         ) : (
           messages.map((msg, idx) => (
             <div key={idx} className={`mb-2 w-full flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`px-3 py-2 rounded-lg inline-block max-w-full break-words ${
-                msg.type === 'user' 
-                  ? 'bg-cyber-lime/20 text-white' 
-                  : 'bg-gray-600/40 text-white/90'
-              }`}>
+                <div
+                  className={`px-3 py-2 rounded-lg inline-block break-words ${
+                    msg.type === 'user'
+                      ? 'bg-cyber-lime/20 text-white max-w-full'
+                      : 'bg-gray-600/40 text-white/90 w-auto min-w-[6rem] max-w-none overflow-x-auto'
+                  }`}
+                  style={
+                    msg.type === 'ai'
+                      ? { display: 'inline-block', width: 'fit-content', maxWidth: '100%', overflowX: 'auto' }
+                      : {}
+                  }
+                >
                 {msg.isLatex ? (
                   <LaTeXRenderer content={msg.text} />
                 ) : (
