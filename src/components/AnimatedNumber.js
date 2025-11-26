@@ -19,7 +19,7 @@ export default function AnimatedNumber({ value, duration = 1000, className = '',
     };
     raf.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf.current);
-  }, [value, duration]);
+  }, [value, duration, display]);
 
   return <span className={className} {...props}>{display.toLocaleString()}</span>;
 }
