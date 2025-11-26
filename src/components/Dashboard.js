@@ -8,6 +8,8 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All Subjects');
   const [selectedYear, setSelectedYear] = useState('All Years');
+  const [selectedSlot, setSelectedSlot] = useState('All Slots');
+  const [selectedExamType, setSelectedExamType] = useState('All Types');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [apiPapers, setApiPapers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -66,7 +68,9 @@ const Dashboard = () => {
   const handleSubjectSelect = (subject) => {
     setSearchTerm(subject);
     setSelectedSubject(subject);
-    setSelectedYear('All Years'); // Reset year filter when subject changes
+    setSelectedYear('All Years');
+    setSelectedSlot('All Slots');
+    setSelectedExamType('All Types');
     fetchPapers(subject);
   };
 
@@ -75,8 +79,14 @@ const Dashboard = () => {
     if (selectedYear !== 'All Years') {
       filtered = filtered.filter(paper => String(paper.year) === String(selectedYear));
     }
+    if (selectedSlot !== 'All Slots') {
+      filtered = filtered.filter(paper => String(paper.slot) === String(selectedSlot));
+    }
+    if (selectedExamType !== 'All Types') {
+      filtered = filtered.filter(paper => String(paper.examType) === String(selectedExamType));
+    }
     return filtered;
-  }, [apiPapers, selectedYear]);
+  }, [apiPapers, selectedYear, selectedSlot, selectedExamType]);
 
   const stats = {
     totalPapers: apiPapers.length,
@@ -164,33 +174,41 @@ const Dashboard = () => {
 
         {/* Filters */}
         <div className="card mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <FilterDropdown
-              label="Subject"
-              value={selectedSubject}
-              onChange={(value) => {
-                setSelectedSubject(value);
-                if (value !== 'All Subjects') {
-                  handleSubjectSelect(value);
-                } else {
-                  setSearchTerm('');
-                  setApiPapers([]);
-                }
-              }}
-              options={subjects}
-            />
-          </div>
-        </div>
-
-        {/* Year Filter */}
-        <div className="card mb-8">
-          <div className="flex flex-wrap items-center gap-4 justify-end">
-            <FilterDropdown
-              label="Year"
-              value={selectedYear}
-              onChange={setSelectedYear}
-              options={["All Years", ...Array.from(new Set(apiPapers.map(paper => paper.year))).sort((a, b) => b - a)]}
-            />
+          <div className="flex flex-wrap items-center gap-4 justify-between">
+            <div className="flex items-center">
+              <FilterDropdown
+                label="Subject"
+                value={selectedSubject}
+                onChange={(value) => {
+                  setSelectedSubject(value);
+                  setSelectedYear('All Years');
+                  setSelectedSlot('All Slots');
+                  setSelectedExamType('All Types');
+                  fetchPapers(value);
+                }}
+                options={subjects}
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <FilterDropdown
+                label="Exam Type"
+                value={selectedExamType}
+                onChange={setSelectedExamType}
+                options={["All Types", ...Array.from(new Set(apiPapers.map(paper => paper.examType).filter(Boolean)))]}
+              />
+              <FilterDropdown
+                label="Slot"
+                value={selectedSlot}
+                onChange={setSelectedSlot}
+                options={["All Slots", ...Array.from(new Set(apiPapers.map(paper => paper.slot).filter(Boolean)))]}
+              />
+              <FilterDropdown
+                label="Year"
+                value={selectedYear}
+                onChange={setSelectedYear}
+                options={["All Years", ...Array.from(new Set(apiPapers.map(paper => paper.year))).sort((a, b) => b - a)]}
+              />
+            </div>
           </div>
         </div>
 
