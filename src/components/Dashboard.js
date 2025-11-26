@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { BookOpen, Users, TrendingUp, Star, Menu, X } from 'lucide-react';
 import { SearchBar, FilterDropdown, PaperCard } from './PaperComponents';
 import { subjects } from '../utils/courseList';
@@ -7,6 +7,7 @@ import { subjects } from '../utils/courseList';
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All Subjects');
+  const [totalViews, setTotalViews] = useState(0);
   const [selectedYear, setSelectedYear] = useState('All Years');
   const [selectedSlot, setSelectedSlot] = useState('All Slots');
   const [selectedExamType, setSelectedExamType] = useState('All Types');
@@ -14,6 +15,7 @@ const Dashboard = () => {
   const [apiPapers, setApiPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const hasFetchedMetadata = useRef(false);
 
   // Fetch papers from API
   const fetchPapers = async (subject) => {
@@ -64,6 +66,28 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  // Fetch site metadata (views) once on mount. This GET request should be
+  // counted as a site visit by the backend (assumption: backend increments
+  // view count on this endpoint when called). We only call this on mount so
+  // searches won't increment views.
+  useEffect(() => {
+    if (hasFetchedMetadata.current) return;
+    hasFetchedMetadata.current = true;
+    const fetchMetadata = async () => {
+      try {
+        const res = await fetch('https://examhaul-backend.vercel.app/get_metadata');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && typeof data.views !== 'undefined') {
+          setTotalViews(data.views);
+        }
+      } catch (err) {
+        console.error('Failed to fetch metadata:', err);
+      }
+    };
+    fetchMetadata();
+  }, []);
 
   const handleSubjectSelect = (subject) => {
     setSearchTerm(subject);
@@ -144,8 +168,8 @@ const Dashboard = () => {
           <div className="card">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white/70 text-sm">Total Downloads</p>
-                <p className="text-3xl font-bold text-white">{stats.totalDownloads.toLocaleString()}</p>
+                <p className="text-white/70 text-sm">Total Views</p>
+                <p className="text-3xl font-bold text-white">{totalViews.toLocaleString()}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-dusk-teal" />
             </div>
