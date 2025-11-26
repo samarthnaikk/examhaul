@@ -201,7 +201,7 @@ const Dashboard = () => {
 
         {/* Centered Search Section */}
         <div className="flex items-center justify-center py-16">
-          <div className="w-full max-w-4xl text-center">
+          <div className="w-full max-w-7xl text-center">
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Find Your Papers
@@ -230,7 +230,7 @@ const Dashboard = () => {
                 ) : (
                   <>
                     {filteredPapers.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {filteredPapers.map((paper) => (
                           <PaperCard key={paper.id} paper={paper} />
                         ))}
