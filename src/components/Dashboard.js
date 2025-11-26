@@ -7,6 +7,7 @@ import { subjects } from '../utils/courseList';
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All Subjects');
+  const [selectedYear, setSelectedYear] = useState('All Years');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [apiPapers, setApiPapers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -65,25 +66,17 @@ const Dashboard = () => {
   const handleSubjectSelect = (subject) => {
     setSearchTerm(subject);
     setSelectedSubject(subject);
+    setSelectedYear('All Years'); // Reset year filter when subject changes
     fetchPapers(subject);
   };
 
   const filteredPapers = useMemo(() => {
-    const filtered = apiPapers.filter(paper => {
-      const matchesSearch = !searchTerm || 
-                           paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           paper.subject.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // More flexible subject matching - check if the selected subject is contained in the paper subject
-      const matchesSubject = selectedSubject === 'All Subjects' || 
-                            paper.subject.toLowerCase().includes(selectedSubject.toLowerCase()) ||
-                            selectedSubject.toLowerCase().includes(paper.subject.toLowerCase());
-      
-      return matchesSearch && matchesSubject;
-    });
-    
+    let filtered = apiPapers;
+    if (selectedYear !== 'All Years') {
+      filtered = filtered.filter(paper => String(paper.year) === String(selectedYear));
+    }
     return filtered;
-  }, [searchTerm, apiPapers, selectedSubject]);
+  }, [apiPapers, selectedYear]);
 
   const stats = {
     totalPapers: apiPapers.length,
@@ -186,7 +179,18 @@ const Dashboard = () => {
               }}
               options={subjects}
             />
-            {/* Other filters can be re-enabled if needed */}
+          </div>
+        </div>
+
+        {/* Year Filter */}
+        <div className="card mb-8">
+          <div className="flex flex-wrap items-center gap-4 justify-end">
+            <FilterDropdown
+              label="Year"
+              value={selectedYear}
+              onChange={setSelectedYear}
+              options={["All Years", ...Array.from(new Set(apiPapers.map(paper => paper.year))).sort((a, b) => b - a)]}
+            />
           </div>
         </div>
 
