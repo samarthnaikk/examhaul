@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { BookOpen, Users, TrendingUp, Star, Menu, X } from 'lucide-react';
 import { SearchBar, FilterDropdown, PaperCard } from './PaperComponents';
 import { subjects } from '../utils/courseList';
+import AnimatedNumber from './AnimatedNumber';
 // import backgroundImage from '../background.png';
 
 const Dashboard = () => {
@@ -67,10 +68,7 @@ const Dashboard = () => {
     }
   };
 
-  // Fetch site metadata (views) once on mount. This GET request should be
-  // counted as a site visit by the backend (assumption: backend increments
-  // view count on this endpoint when called). We only call this on mount so
-  // searches won't increment views.
+
   useEffect(() => {
     if (hasFetchedMetadata.current) return;
     hasFetchedMetadata.current = true;
@@ -159,7 +157,9 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/70 text-sm">Total Papers</p>
-                <p className="text-3xl font-bold text-white">{stats.totalPapers}</p>
+                <p className="text-3xl font-bold text-white">
+                  <AnimatedNumber value={stats.totalPapers} duration={1200} />
+                </p>
               </div>
               <BookOpen className="w-8 h-8 text-electric-fuchsia" />
             </div>
@@ -169,7 +169,9 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/70 text-sm">Total Views</p>
-                <p className="text-3xl font-bold text-white">{totalViews.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-white">
+                  <AnimatedNumber value={totalViews} duration={1200} />
+                </p>
               </div>
               <TrendingUp className="w-8 h-8 text-dusk-teal" />
             </div>
@@ -179,7 +181,9 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/70 text-sm">With Solutions</p>
-                <p className="text-3xl font-bold text-white">{stats.withSolutions}</p>
+                <p className="text-3xl font-bold text-white">
+                  <AnimatedNumber value={stats.withSolutions} duration={1200} />
+                </p>
               </div>
               <Star className="w-8 h-8 text-cyber-lime" />
             </div>
@@ -189,7 +193,9 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/70 text-sm">Subjects</p>
-                <p className="text-3xl font-bold text-white">{stats.subjects}</p>
+                <p className="text-3xl font-bold text-white">
+                  <AnimatedNumber value={stats.subjects} duration={1200} />
+                </p>
               </div>
               <Users className="w-8 h-8 text-dusk-teal" />
             </div>
