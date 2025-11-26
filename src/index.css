@@ -1,3 +1,16 @@
+/* Custom dropdown styles for 'All' selections */
+.dropdown-black {
+  background: #000 !important;
+  color: #fff !important;
+}
+.dropdown-black:focus {
+  border-color: #FF1E8E;
+  box-shadow: 0 0 0 2px rgba(255, 30, 142, 0.2);
+}
+.option-white {
+  background: #000 !important;
+  color: #fff !important;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

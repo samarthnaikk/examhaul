@@ -103,15 +103,17 @@ const SearchBar = ({ searchTerm, setSearchTerm, subjects, onSubjectSelect }) => 
 };
 
 const FilterDropdown = ({ label, value, onChange, options }) => {
+  // Check if the value is one of the 'All' options
+  const isAllSelected = ["All Types", "All Slots", "All Years"].includes(value);
   return (
     <div>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="input-field appearance-none cursor-pointer"
+        className={`input-field appearance-none cursor-pointer ${isAllSelected ? 'dropdown-black' : ''}`}
       >
         {options.map((option) => (
-          <option key={option} value={option}>
+          <option key={option} value={option} className={isAllSelected ? 'option-white' : ''}>
             {option}
           </option>
         ))}
