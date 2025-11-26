@@ -155,12 +155,22 @@ const PaperCard = ({ paper }) => {
         </div>
 
         <div className="flex items-center justify-between w-full">
-          <button 
-            onClick={() => setIsPDFViewerOpen(true)}
-            className="btn-secondary flex items-center space-x-2"
-          >
-            <span>View Paper</span>
-          </button>
+          <div className="flex items-center space-x-2">
+            <button 
+              onClick={() => setIsPDFViewerOpen(true)}
+              className="btn-secondary flex items-center space-x-2"
+            >
+              <span>View Paper</span>
+            </button>
+            <button
+              onClick={() => window.open(paper.url, '_blank')}
+              style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              aria-label="Open in new tab"
+            >
+              {/* Lucide ExternalLink icon */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M21 21H3V3h6"/></svg>
+            </button>
+          </div>
           <button
             onClick={() => setIsGeminiOpen(true)}
             style={{ marginLeft: 'auto', background: 'none', border: 'none', padding: 0, cursor: 'pointer', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
