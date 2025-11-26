@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { BookOpen, Users, TrendingUp, Star, Menu, X } from 'lucide-react';
 import { SearchBar, FilterDropdown, PaperCard } from './PaperComponents';
 import { subjects } from '../utils/courseList';
@@ -8,6 +8,7 @@ import AnimatedNumber from './AnimatedNumber';
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All Subjects');
+  const [totalPapers, setTotalPapers] = useState(0);
   const [totalViews, setTotalViews] = useState(0);
   const [selectedYear, setSelectedYear] = useState('All Years');
   const [selectedSlot, setSelectedSlot] = useState('All Slots');
@@ -16,7 +17,7 @@ const Dashboard = () => {
   const [apiPapers, setApiPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const hasFetchedMetadata = useRef(false);
+  const [totalSubjects, setTotalSubjects] = useState(0);
 
   // Fetch papers from API
   const fetchPapers = async (subject) => {
@@ -70,15 +71,15 @@ const Dashboard = () => {
 
 
   useEffect(() => {
-    if (hasFetchedMetadata.current) return;
-    hasFetchedMetadata.current = true;
     const fetchMetadata = async () => {
       try {
         const res = await fetch('https://examhaul-backend.vercel.app/get_metadata');
         if (!res.ok) return;
         const data = await res.json();
-        if (data && typeof data.views !== 'undefined') {
-          setTotalViews(data.views);
+        if (data) {
+          if (typeof data.number_papers !== 'undefined') setTotalPapers(data.number_papers);
+          if (typeof data.subjects !== 'undefined') setTotalSubjects(data.subjects);
+          if (typeof data.views !== 'undefined') setTotalViews(data.views);
         }
       } catch (err) {
         console.error('Failed to fetch metadata:', err);
@@ -111,10 +112,10 @@ const Dashboard = () => {
   }, [apiPapers, selectedYear, selectedSlot, selectedExamType]);
 
   const stats = {
-    totalPapers: apiPapers.length,
-    totalDownloads: apiPapers.reduce((sum, paper) => sum + paper.downloadCount, 0),
-    withSolutions: apiPapers.length, // All papers have solutions
-    subjects: new Set(apiPapers.map(paper => paper.subject)).size
+    totalPapers,
+    totalViews,
+    withSolutions: totalPapers,
+    subjects: totalSubjects
   };
 
   return (
@@ -170,7 +171,7 @@ const Dashboard = () => {
               <div>
                 <p className="text-white/70 text-sm">Total Views</p>
                 <p className="text-3xl font-bold text-white">
-                  <AnimatedNumber value={totalViews} duration={1200} />
+                  <AnimatedNumber value={stats.totalViews} duration={1200} />
                 </p>
               </div>
               <TrendingUp className="w-8 h-8 text-dusk-teal" />
