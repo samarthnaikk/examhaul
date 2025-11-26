@@ -1,15 +1,66 @@
-/* Custom dropdown styles for 'All' selections */
-.dropdown-black {
+/* Custom dropdown styles - permanent black background with green theme */
+select.input-field,
+select.dropdown-black {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+select.input-field:focus,
+select.dropdown-black:focus {
+  border-color: #C2FF1A !important;
+  box-shadow: 0 0 0 2px rgba(194, 255, 26, 0.2) !important;
+  outline: none !important;
+  background: #000 !important;
+}
+
+select.input-field:hover,
+select.dropdown-black:hover {
+  border-color: #C2FF1A !important;
+  background: #000 !important;
+}
+
+select.input-field option,
+select.dropdown-black option {
+  background: #000 !important;
+  color: #fff !important;
+  padding: 8px 12px;
+}
+
+select.input-field option:hover,
+select.dropdown-black option:hover {
+  background: #C2FF1A !important;
+  color: #000 !important;
+}
+
+select.input-field option:checked,
+select.dropdown-black option:checked {
+  background: #C2FF1A !important;
+  color: #000 !important;
+}
+
+/* Force all states to maintain black background */
+select.input-field[data-selected],
+select.dropdown-black[data-selected] {
   background: #000 !important;
   color: #fff !important;
 }
-.dropdown-black:focus {
-  border-color: #FF1E8E;
-  box-shadow: 0 0 0 2px rgba(255, 30, 142, 0.2);
+
+/* Webkit specific styles for better cross-browser support */
+select.input-field::-webkit-scrollbar,
+select.dropdown-black::-webkit-scrollbar {
+  width: 8px;
 }
-.option-white {
-  background: #000 !important;
-  color: #fff !important;
+
+select.input-field::-webkit-scrollbar-track,
+select.dropdown-black::-webkit-scrollbar-track {
+  background: #000;
+}
+
+select.input-field::-webkit-scrollbar-thumb,
+select.dropdown-black::-webkit-scrollbar-thumb {
+  background: #C2FF1A;
+  border-radius: 4px;
 }
 @tailwind base;
 @tailwind components;
